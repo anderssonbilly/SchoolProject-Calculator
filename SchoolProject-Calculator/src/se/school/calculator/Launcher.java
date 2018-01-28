@@ -1,12 +1,11 @@
 package se.school.calculator;
 
 import javafx.application.Application;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
-import se.school.calculator.handlers.StageHandler;
+import se.school.calculator.scenes.*;
 
 public class Launcher extends Application {
-
-	public static StageHandler stageHandler = new StageHandler();
 
 	public static void main(String[] args) {
 		launch(args);
@@ -15,8 +14,12 @@ public class Launcher extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 
-		stageHandler.setupMainStage(stage);
-
-		stageHandler.mainStage.setScene(stageHandler.calculatorScene);
+		// Create and set scene
+		Scene scene = new CalculatorScene().buildScene();
+		stage.setScene(scene);
+		
+		// Set title and show
+		stage.setTitle("EvilCorp Calculator");
+		stage.show();
 	}
 }

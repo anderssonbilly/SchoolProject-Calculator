@@ -8,104 +8,143 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
+import se.school.calculator.Calculator;
 
 public class CalculatorScene {
-
+	
+	// RootElement
+	BorderPane root;
+	
+	long value = 0;
+	
 	public Scene buildScene() {
 
-		BorderPane border = new BorderPane();
-
-		HBox hbox = addHBox();
-		GridPane grid = addGridPane();
-
-		border.setTop(hbox);
-		border.setCenter(grid);
-
-		Scene scene = new Scene(border, 375, 500);
-
-		return scene;
+		root = new BorderPane();
+		root.setTop(display());
+		root.setCenter(buttons());
+		
+		return new Scene(root, 375, 500);
 	}
 
-	private HBox addHBox() {
-		HBox hbox = new HBox();
+	private VBox display() {
 
-		Text title = new Text();
-		title.setFont(new Font(30));
-		title.setText("Evil Corp Calculator");
-		hbox.getChildren().addAll(title);
+		VBox vbox = new VBox();
+		TextField tfNumber = new TextField();
+		tfNumber.setId("display");
+		tfNumber.setText("");
+		tfNumber.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+		//textDisplay.setMinHeight(Double.MAX_VALUE);
+		tfNumber.setFont(new Font(25));
+		tfNumber.setDisable(true);
+		vbox.getChildren().add(tfNumber);
+		return vbox;
 
-		return hbox;
 	}
 
-	private GridPane addGridPane() {
+
+	private GridPane buttons() {		
+		TextField display = (TextField) this.root.lookup("#display");
+		
+	
+		/*===================================================
+			Create grid
+		=====================================================*/
 		GridPane grid = new GridPane();
 		
+		// Rows
 		RowConstraints rowCon = new RowConstraints();
 		rowCon.setPercentHeight(100);
 		rowCon.setVgrow(Priority.ALWAYS);
 		rowCon.setFillHeight(true);
 		grid.getRowConstraints().addAll(rowCon, rowCon, rowCon, rowCon, rowCon);
 		
+		// Columns
 		ColumnConstraints colCon = new ColumnConstraints();
 		colCon.setPercentWidth(100);
 		colCon.setHgrow(Priority.ALWAYS);
 		colCon.setFillWidth(true);
 		grid.getColumnConstraints().addAll(colCon, colCon, colCon, colCon);
 
-		// Row 0
-		TextField textFieldEqvation = new TextField();
-		textFieldEqvation.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
-		textFieldEqvation.setMaxHeight(100);
-		textFieldEqvation.setFont(new Font(25));
-		textFieldEqvation.setDisable(true);
+		/*
+		 * =================================================== 
+		 * Create buttons
+		 * =====================================================
+		 */
 
-		// Row 1
-		Button btn9 = new Button("9");
-		Button btn8 = new Button("8");
-		Button btn7 = new Button("7");
+		// buttons 0-9 digit
+		Button[] digit = new Button[10];
+
+		for (Integer i = 0; i < 10; i++) {
+			digit[i] = new Button(i.toString());
+
+			// append digit to display on click event
+			digit[i].setOnMouseClicked(event -> {
+					display.appendText(((Button) event.getSource()).getText());
+			});
+		}
+
+		// button +-
+		Button btnPlusMinus = new Button("+-");
+
+		// button Empty
+		Button btnEmpty = new Button("");
+
+		// button CE
+		Button btnCE = new Button("CE");
+
+		// button C
+		Button btnC = new Button("C");
+
+		// button /
 		Button btnDivision = new Button("/");
 
-		// Row 2
-		Button btn6 = new Button("6");
-		Button btn5 = new Button("5");
-		Button btn4 = new Button("4");
+		// button *
 		Button btnMultiplication = new Button("*");
 
-		// Row 3
-		Button btn3 = new Button("3");
-		Button btn2 = new Button("2");
-		Button btn1 = new Button("1");
+		// button -
 		Button btnSubstraction = new Button("-");
+		btnSubstraction.setOnMouseClicked(event -> {
+			value = Calculator.subtract(value, Long.parseLong(display.getText()));
+		});
 
-		// Row 4
-		Button btnDecimal = new Button(".");
-		Button btn0 = new Button("0");
-		Button btnEnter = new Button("=");
-		btnEnter.setDefaultButton(true);
+		// button +
 		Button btnAddition = new Button("+");
+		btnAddition.setOnMouseClicked(event -> {
+			value = Calculator.add(value, Long.parseLong(display.getText()));
+		});
 
-		grid.add(textFieldEqvation, 0, 0, 4, 1);
-		grid.addRow(1, btn7, btn8, btn9, btnDivision);
-		grid.addRow(2, btn4, btn5, btn6, btnMultiplication);
-		grid.addRow(3, btn1, btn2, btn3, btnSubstraction);
-		grid.addRow(4, btnDecimal, btn0, btnEnter, btnAddition);
+		// button .
+		Button btnDecimal = new Button(".");
+
+		// button =
+		Button btnEnter = new Button("=");
+
+		/*
+		 * =================================================== 
+		 * Add buttons to grid
+		 * =====================================================
+		 */
+		grid.addRow(0, btnCE, 		btnC, 		btnEmpty, 	btnDivision);
+		grid.addRow(1, digit[7], 	digit[8], 	digit[9], 	btnMultiplication);
+		grid.addRow(2, digit[4], 	digit[5], 	digit[6], 	btnSubstraction);
+		grid.addRow(3, digit[1], 	digit[2], 	digit[3], 	btnAddition);
+		grid.addRow(4, btnPlusMinus,digit[0], 	btnDecimal, btnEnter);
+
+		/*
+		 * =================================================== 
+		 * Set shared attributes
+		 * =====================================================
+		 */
 
 		for (Node node : grid.getChildrenUnmodifiable()) {
 			if (node instanceof Button) {
 				((Button) node).setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-				
-				((Button) node).setOnAction(event->{
-					System.out.println(((Button) event.getSource()).getText());
-					
-					textFieldEqvation.appendText(((Button) event.getSource()).getText());
-					
-					//Switch case i en separat handler för varje knapp
-				});
+				((Button) node).setStyle("-fx-font: 22 arial;");
+
 			}
 		}
 
