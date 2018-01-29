@@ -6,13 +6,22 @@ public class Calculator {
 
 	private ArrayList<String> equation = new ArrayList<String>();
 
+	public String equationToString() {	
+		StringBuilder sb = new StringBuilder();
+		
+		for(String element : equation) {
+			sb.append(element);
+		}
+		return sb.toString();
+	}
+
 	public String clear() {	
 		equation.clear();
 		return "";
 	}
 	
 	public String toEquation(String o) {
-		StringBuilder sb = new StringBuilder();
+		
 		if (intCheck(o)) {
 			equation.add(o.toString());
 		} else if (equation.size() > 0) {
@@ -22,10 +31,7 @@ public class Calculator {
 				equation.set(equation.size() - 1, o);
 		}
 
-		for (String i:equation) {
-			sb.append(i);
-		}
-		return sb.toString();
+		return equationToString();
 	}
 
 	public String result() {
@@ -40,6 +46,7 @@ public class Calculator {
 				arithmetic = equation.get(i);
 				first = false;
 				i++;
+				// TODO Remove system.out.println()
 				System.out.println("nr1: " + temp);
 			}
 
@@ -47,6 +54,7 @@ public class Calculator {
 				temp2 = temp2 + equation.get(i);
 			}
 			if (!first && !intCheck(equation.get(i))) {
+				// TODO Remove system.out.println()
 				System.out.println("nr2: " + temp2);
 				System.out.println("calculate: " + temp + arithmetic + temp2);
 				temp = calculate(Integer.parseInt(temp), Integer.parseInt(temp2), arithmetic);
@@ -54,6 +62,7 @@ public class Calculator {
 				arithmetic = equation.get(i);
 			}
 			if (!first && i == equation.size() - 1) {
+				// TODO Remove system.out.println()
 				System.out.println("last: " + temp + arithmetic + temp2);
 				temp = calculate(Integer.parseInt(temp), Integer.parseInt(temp2), arithmetic);
 			}
