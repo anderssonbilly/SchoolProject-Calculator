@@ -51,8 +51,9 @@ public class CalculatorScene {
 		Calculator calculator = new Calculator();
 
 		/*
-		 * =================================================== Create grid
-		 * =====================================================
+		 =================================================== 
+		 Create grid
+		 =====================================================
 		 */
 		GridPane grid = new GridPane();
 
@@ -71,21 +72,18 @@ public class CalculatorScene {
 		grid.getColumnConstraints().addAll(colCon, colCon, colCon, colCon);
 
 		/*
-		 * =================================================== Create buttons
-		 * =====================================================
+		 =====================================================
+		 Create buttons
+		 =====================================================
 		 */
 
 		// buttons 0-9 digit
 		Button[] digit = new Button[10];
-
 		for (Integer i = 0; i < 10; i++) {
 			digit[i] = new Button(i.toString());
-
-			// append digit to display on click event
-			// digit[i].setOnMouseClicked(event -> {
-			// display.setText(calculator.toEquation(((Button)
-			// event.getSource()).getText()));
-			// });
+			digit[i].setOnMouseClicked(event -> {
+				display.setText(calculator.toEquation(((Button) event.getSource()).getText()));
+			});
 		}
 
 		// button +-
@@ -96,32 +94,54 @@ public class CalculatorScene {
 
 		// button CE
 		Button btnCE = new Button("CE");
-
+		btnCE.setOnMouseClicked(event -> {
+		 	display.setText(calculator.clear());
+		});	
+		
 		// button C
 		Button btnC = new Button("C");
-
+		btnC.setOnMouseClicked(event -> {
+		 	display.setText(calculator.clear());
+		});	
+		
 		// button /
 		Button btnDivision = new Button("/");
+		btnDivision.setOnMouseClicked(event -> {
+		 	display.setText(calculator.toEquation("/"));
+		});		
 
 		// button *
 		Button btnMultiplication = new Button("*");
+		btnMultiplication.setOnMouseClicked(event -> {
+		 	display.setText(calculator.toEquation("*"));
+		});
 
 		// button -
 		Button btnSubstraction = new Button("-");
-
+		btnSubstraction.setOnMouseClicked(event -> {
+		 	display.setText(calculator.toEquation("-"));
+		});
+		
 		// button +
 		Button btnAddition = new Button("+");
-
+		btnAddition.setOnMouseClicked(event -> {
+		 	display.setText(calculator.toEquation("+"));
+		});
+		
 		// button .
 		Button btnDecimal = new Button(".");
 
 		// button =
 		Button btnEnter = new Button("=");
 		btnEnter.setDefaultButton(true);
+		btnEnter.setOnMouseClicked(event -> {
+			display.setText(calculator.result());
+		});
 
 		/*
-		 * =================================================== Add buttons to grid
-		 * =====================================================
+		===================================================== 
+	 	Add buttons to grid
+		=====================================================
 		 */
 		grid.addRow(0, btnCE, btnC, btnEmpty, btnDivision);
 		grid.addRow(1, digit[7], digit[8], digit[9], btnMultiplication);
@@ -130,34 +150,17 @@ public class CalculatorScene {
 		grid.addRow(4, btnPlusMinus, digit[0], btnDecimal, btnEnter);
 
 		/*
-		 * =================================================== Set shared attributes
-		 * =====================================================
+		 =====================================================
+		 Set shared attributes
+		 =====================================================
 		 */
-
 		for (Node node : grid.getChildrenUnmodifiable()) {
 			if (node instanceof Button) {
 				((Button) node).setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 				((Button) node).setStyle("-fx-font: 22 arial;");
-
 			}
 		}
 
-		/*
-		 * ==== action event for all buttons
-		 * ====
-		 * */
-		for (Node node : grid.getChildrenUnmodifiable()) {
-			if (node instanceof Button) {
-				((Button) node).setOnAction(event -> {
-					System.out.println(((Button) event.getSource()).getText());
-					if (!((Button) event.getSource()).getText().equals("="))
-						display.setText(calculator.toEquation(((Button) event.getSource()).getText()));
-					else {
-						display.setText(calculator.result());
-					}
-				});
-			}
-		}
 		return grid;
 	}
 }
