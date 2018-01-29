@@ -15,18 +15,18 @@ import javafx.scene.text.Font;
 import se.school.calculator.Calculator;
 
 public class CalculatorScene {
-	
+
 	// RootElement
 	BorderPane root;
-	
+
 	long value = 0;
-	
+
 	public Scene buildScene() {
 
 		root = new BorderPane();
 		root.setTop(display());
 		root.setCenter(buttons());
-		
+
 		return new Scene(root, 375, 500);
 	}
 
@@ -37,31 +37,32 @@ public class CalculatorScene {
 		tfNumber.setId("display");
 		tfNumber.setText("");
 		tfNumber.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
-		//textDisplay.setMinHeight(Double.MAX_VALUE);
-		tfNumber.setFont(new Font(25));
+		// textDisplay.setMinHeight(Double.MAX_VALUE);
+		tfNumber.setFont(new Font(15));
 		tfNumber.setDisable(true);
 		vbox.getChildren().add(tfNumber);
 		return vbox;
 
 	}
 
-
-	private GridPane buttons() {		
+	private GridPane buttons() {
 		TextField display = (TextField) this.root.lookup("#display");
-		
-	
-		/*===================================================
-			Create grid
-		=====================================================*/
+
+		Calculator calculator = new Calculator();
+
+		/*
+		 * =================================================== Create grid
+		 * =====================================================
+		 */
 		GridPane grid = new GridPane();
-		
+
 		// Rows
 		RowConstraints rowCon = new RowConstraints();
 		rowCon.setPercentHeight(100);
 		rowCon.setVgrow(Priority.ALWAYS);
 		rowCon.setFillHeight(true);
 		grid.getRowConstraints().addAll(rowCon, rowCon, rowCon, rowCon, rowCon);
-		
+
 		// Columns
 		ColumnConstraints colCon = new ColumnConstraints();
 		colCon.setPercentWidth(100);
@@ -70,8 +71,7 @@ public class CalculatorScene {
 		grid.getColumnConstraints().addAll(colCon, colCon, colCon, colCon);
 
 		/*
-		 * =================================================== 
-		 * Create buttons
+		 * =================================================== Create buttons
 		 * =====================================================
 		 */
 
@@ -82,9 +82,10 @@ public class CalculatorScene {
 			digit[i] = new Button(i.toString());
 
 			// append digit to display on click event
-			digit[i].setOnMouseClicked(event -> {
-					display.appendText(((Button) event.getSource()).getText());
-			});
+			// digit[i].setOnMouseClicked(event -> {
+			// display.setText(calculator.toEquation(((Button)
+			// event.getSource()).getText()));
+			// });
 		}
 
 		// button +-
@@ -107,36 +108,29 @@ public class CalculatorScene {
 
 		// button -
 		Button btnSubstraction = new Button("-");
-		btnSubstraction.setOnMouseClicked(event -> {
-			value = Calculator.subtract(value, Long.parseLong(display.getText()));
-		});
 
 		// button +
 		Button btnAddition = new Button("+");
-		btnAddition.setOnMouseClicked(event -> {
-			value = Calculator.add(value, Long.parseLong(display.getText()));
-		});
 
 		// button .
 		Button btnDecimal = new Button(".");
 
 		// button =
 		Button btnEnter = new Button("=");
+		btnEnter.setDefaultButton(true);
 
 		/*
-		 * =================================================== 
-		 * Add buttons to grid
+		 * =================================================== Add buttons to grid
 		 * =====================================================
 		 */
-		grid.addRow(0, btnCE, 		btnC, 		btnEmpty, 	btnDivision);
-		grid.addRow(1, digit[7], 	digit[8], 	digit[9], 	btnMultiplication);
-		grid.addRow(2, digit[4], 	digit[5], 	digit[6], 	btnSubstraction);
-		grid.addRow(3, digit[1], 	digit[2], 	digit[3], 	btnAddition);
-		grid.addRow(4, btnPlusMinus,digit[0], 	btnDecimal, btnEnter);
+		grid.addRow(0, btnCE, btnC, btnEmpty, btnDivision);
+		grid.addRow(1, digit[7], digit[8], digit[9], btnMultiplication);
+		grid.addRow(2, digit[4], digit[5], digit[6], btnSubstraction);
+		grid.addRow(3, digit[1], digit[2], digit[3], btnAddition);
+		grid.addRow(4, btnPlusMinus, digit[0], btnDecimal, btnEnter);
 
 		/*
-		 * =================================================== 
-		 * Set shared attributes
+		 * =================================================== Set shared attributes
 		 * =====================================================
 		 */
 
@@ -148,6 +142,22 @@ public class CalculatorScene {
 			}
 		}
 
+		/*
+		 * ==== action event for all buttons
+		 * ====
+		 * */
+		for (Node node : grid.getChildrenUnmodifiable()) {
+			if (node instanceof Button) {
+				((Button) node).setOnAction(event -> {
+					System.out.println(((Button) event.getSource()).getText());
+					if (!((Button) event.getSource()).getText().equals("="))
+						display.setText(calculator.toEquation(((Button) event.getSource()).getText()));
+					else {
+						display.setText(calculator.result());
+					}
+				});
+			}
+		}
 		return grid;
 	}
 }
