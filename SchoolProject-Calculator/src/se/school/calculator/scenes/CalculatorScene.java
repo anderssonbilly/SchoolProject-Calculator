@@ -1,9 +1,11 @@
 package se.school.calculator.scenes;
 
+import javafx.geometry.Insets;
 import javafx.geometry.NodeOrientation;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
@@ -33,13 +35,21 @@ public class CalculatorScene {
 	private VBox display() {
 
 		VBox vbox = new VBox();
+		
+		// Label for displaying equation
+		Label lblEquation = new Label("");
+		lblEquation.setId("equation");
+		
+		// Textfield for displaying numbers
 		TextField tfNumber = new TextField();
 		tfNumber.setId("display");
 		tfNumber.setText("");
 		tfNumber.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
-		// textDisplay.setMinHeight(Double.MAX_VALUE);
-		tfNumber.setFont(new Font(15));
+		tfNumber.setFont(new Font(25));
 		tfNumber.setDisable(true);
+		
+		// Add label and textfield to vbox
+		vbox.getChildren().add(lblEquation);
 		vbox.getChildren().add(tfNumber);
 		return vbox;
 
@@ -47,6 +57,7 @@ public class CalculatorScene {
 
 	private GridPane buttons() {
 		TextField display = (TextField) this.root.lookup("#display");
+		Label equation = (Label) this.root.lookup("#equation");
 
 		Calculator calculator = new Calculator();
 
@@ -86,55 +97,65 @@ public class CalculatorScene {
 			});
 		}
 
-		// button +-
+		// button +- (disabled...)
 		Button btnPlusMinus = new Button("+-");
+		btnPlusMinus.setDisable(true);
 
-		// button Empty
+		// button Empty (disabled...)
 		Button btnEmpty = new Button("");
+		btnEmpty.setDisable(true);
 
 		// button CE
 		Button btnCE = new Button("CE");
 		btnCE.setOnMouseClicked(event -> {
 		 	display.setText(calculator.clear());
+		 	equation.setText(calculator.clear());
 		});	
 		
 		// button C
 		Button btnC = new Button("C");
 		btnC.setOnMouseClicked(event -> {
 		 	display.setText(calculator.clear());
+		 	equation.setText(calculator.clear());
 		});	
 		
 		// button /
 		Button btnDivision = new Button("/");
 		btnDivision.setOnMouseClicked(event -> {
 		 	display.setText(calculator.toEquation("/"));
+		 	equation.setText(calculator.equationToString());
 		});		
 
 		// button *
 		Button btnMultiplication = new Button("*");
 		btnMultiplication.setOnMouseClicked(event -> {
 		 	display.setText(calculator.toEquation("*"));
+		 	equation.setText(calculator.equationToString());
 		});
 
 		// button -
 		Button btnSubstraction = new Button("-");
 		btnSubstraction.setOnMouseClicked(event -> {
 		 	display.setText(calculator.toEquation("-"));
+		 	equation.setText(calculator.equationToString());
 		});
 		
 		// button +
 		Button btnAddition = new Button("+");
 		btnAddition.setOnMouseClicked(event -> {
 		 	display.setText(calculator.toEquation("+"));
+		 	equation.setText(calculator.equationToString());
 		});
 		
-		// button .
+		// button . (disabled...)
 		Button btnDecimal = new Button(".");
+		btnDecimal.setDisable(true);
 
 		// button =
 		Button btnEnter = new Button("=");
 		btnEnter.setDefaultButton(true);
 		btnEnter.setOnMouseClicked(event -> {
+			equation.setText(calculator.equationToString());
 			display.setText(calculator.result());
 		});
 
@@ -157,7 +178,7 @@ public class CalculatorScene {
 		for (Node node : grid.getChildrenUnmodifiable()) {
 			if (node instanceof Button) {
 				((Button) node).setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-				((Button) node).setStyle("-fx-font: 22 arial;");
+				((Button) node).setStyle("-fx-font: 22 arial; -fx-margin: 5px");
 			}
 		}
 
