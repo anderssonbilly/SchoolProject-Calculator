@@ -90,8 +90,9 @@ public class CalculatorScene {
 		}
 
 		// button +-
-		Button btnPlusMinus = new Button("+-");
-
+		Button btnPlusMinus = new Button("+-");		
+		
+		
 		// button Empty
 		Button btnEmpty = new Button("");
 		btnEmpty.setDisable(true);
