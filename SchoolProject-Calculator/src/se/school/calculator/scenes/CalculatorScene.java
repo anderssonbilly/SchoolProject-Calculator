@@ -38,8 +38,9 @@ public class CalculatorScene {
 		tfNumber.setText("");
 		tfNumber.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
 		// textDisplay.setMinHeight(Double.MAX_VALUE);
-		tfNumber.setFont(new Font(15));
+		tfNumber.setFont(new Font(20));
 		tfNumber.setDisable(true);
+		tfNumber.setStyle("-fx-background-color: lightblue; -fx-text-fill: blue; -fx-padding: 20;");
 		vbox.getChildren().add(tfNumber);
 		return vbox;
 
@@ -93,12 +94,19 @@ public class CalculatorScene {
 
 		// button Empty
 		Button btnEmpty = new Button("");
+		btnEmpty.setDisable(true);
+
 
 		// button CE
 		Button btnCE = new Button("CE");
+		btnEmpty.setDisable(true); //TODO temp disabled
 
 		// button C
 		Button btnC = new Button("C");
+		btnC.setOnMouseClicked(event -> {
+		 	display.setText(calculator.clear());
+		});	
+
 
 		// button /
 		Button btnDivision = new Button("/");

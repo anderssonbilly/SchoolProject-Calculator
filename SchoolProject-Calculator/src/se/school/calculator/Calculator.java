@@ -6,6 +6,10 @@ public class Calculator {
 
 	private ArrayList<String> equation = new ArrayList<String>();
 
+	public String clear() {	
+		equation.clear();
+		return "";
+	}
 	
 	public String toEquation(String o) {
 		StringBuilder sb = new StringBuilder();
