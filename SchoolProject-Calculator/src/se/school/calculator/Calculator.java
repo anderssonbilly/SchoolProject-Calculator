@@ -17,7 +17,7 @@ public class Calculator {
 
 	public String clear() {	
 		equation.clear();
-		return "";
+		return "0"; // Changed to 0 from empty
 	}
 	
 	public String toEquation(String o) {

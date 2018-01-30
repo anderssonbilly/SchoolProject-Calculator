@@ -47,6 +47,7 @@ public class CalculatorScene {
 		tfNumber.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
 		tfNumber.setFont(new Font(25));
 		tfNumber.setDisable(true);
+		tfNumber.setStyle("-fx-background-color: lightblue; -fx-text-fill: blue; -fx-padding: 20;");
 		
 		// Add label and textfield to vbox
 		vbox.getChildren().add(lblEquation);
