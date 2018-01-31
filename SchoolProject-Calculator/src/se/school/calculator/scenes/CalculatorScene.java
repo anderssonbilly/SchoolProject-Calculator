@@ -37,7 +37,14 @@ public class CalculatorScene {
 		
 		// Label for displaying equation
 		Label lblEquation = new Label("");
+		
+		
+		lblEquation.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 		lblEquation.setId("equation");
+		lblEquation.setAlignment(Pos.CENTER_RIGHT);
+		lblEquation.setFont(new Font(15));
+		lblEquation.setDisable(true);
+		lblEquation.setStyle("-fx-background-color: lightblue; -fx-text-fill: blue; -fx-padding: 10;");
 		
 		// Textfield for displaying numbers
 		TextField tfNumber = new TextField();
@@ -46,7 +53,7 @@ public class CalculatorScene {
 		tfNumber.setAlignment(Pos.CENTER_RIGHT);
 		tfNumber.setFont(new Font(25));
 		tfNumber.setDisable(true);
-		tfNumber.setStyle("-fx-background-color: lightblue; -fx-text-fill: blue; -fx-padding: 20;");
+		tfNumber.setStyle("-fx-background-color: lightblue; -fx-text-fill: NAVY; -fx-padding: 10;");
 		
 		// Add label and textfield to vbox
 		vbox.getChildren().add(lblEquation);
