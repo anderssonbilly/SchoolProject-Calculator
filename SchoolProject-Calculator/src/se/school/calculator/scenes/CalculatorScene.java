@@ -1,7 +1,6 @@
 package se.school.calculator.scenes;
 
-import javafx.geometry.Insets;
-import javafx.geometry.NodeOrientation;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -44,7 +43,7 @@ public class CalculatorScene {
 		TextField tfNumber = new TextField();
 		tfNumber.setId("display");
 		tfNumber.setText("");
-		tfNumber.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+		tfNumber.setAlignment(Pos.CENTER_RIGHT);
 		tfNumber.setFont(new Font(25));
 		tfNumber.setDisable(true);
 		tfNumber.setStyle("-fx-background-color: lightblue; -fx-text-fill: blue; -fx-padding: 20;");
