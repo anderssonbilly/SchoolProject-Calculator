@@ -15,8 +15,8 @@ public class Launcher extends Application {
 	public void start(Stage stage) throws Exception {
 
 		// Create and set scene
-		Scene scene = new CalculatorScene().buildScene();
-		stage.setScene(scene);
+		Scene calcScene = new CalculatorScene().getScene();
+		stage.setScene(calcScene);
 		
 		// Set title and show
 		stage.setTitle("EvilCorp Calculator");
