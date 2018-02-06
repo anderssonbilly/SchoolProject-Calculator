@@ -1,11 +1,14 @@
 package se.school.calculator.scenes;
 
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -17,20 +20,42 @@ import se.school.calculator.Calculator;
 
 public class CalculatorScene {
 
-	// RootElement
-	BorderPane root;
-
-	long value = 0;
-
-	public Scene buildScene() {
-
-		root = new BorderPane();
-		root.setTop(display());
-		root.setCenter(buttons());
-
-		return new Scene(root, 375, 500);
+	// THE SCENE
+	private Scene scene;
+	public Scene getScene() {
+		return scene;
 	}
 
+	// Calculator
+	private Calculator calculator = new Calculator();
+
+	// Constructor
+	public CalculatorScene() {
+				
+		// Create the layout
+		BorderPane layout = new BorderPane();
+		
+		// Create the display and attach it to the top 
+		layout.setTop(display());
+		
+		// Create Numpad and attach it to the center
+		layout.setCenter(buttons());
+
+		// create scene and add keyeventhandler
+		scene = new Scene(layout, 375, 500);
+		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent event) {
+				
+				if (event.getCode() == KeyCode.ENTER)
+					handleEvent("=");
+				else
+					handleEvent(event.getText());
+				}
+		});
+	}
+
+	// Create the display
 	private VBox display() {
 
 		VBox vbox = new VBox();
@@ -62,11 +87,9 @@ public class CalculatorScene {
 
 	}
 
+	
+	// create the numpad
 	private GridPane buttons() {
-		TextField display = (TextField) this.root.lookup("#display");
-		Label equation = (Label) this.root.lookup("#equation");
-
-		Calculator calculator = new Calculator();
 
 		/*
 		 =================================================== 
@@ -99,9 +122,7 @@ public class CalculatorScene {
 		Button[] digit = new Button[10];
 		for (Integer i = 0; i < 10; i++) {
 			digit[i] = new Button(i.toString());
-			digit[i].setOnMouseClicked(event -> {
-				display.setText(calculator.toEquation(((Button) event.getSource()).getText()));
-			});
+			digit[i].setOnMouseClicked(event -> {handleEvent(((Button) event.getSource()).getText());});
 		}
 
 		// button +- (disabled...)
@@ -114,45 +135,26 @@ public class CalculatorScene {
 
 		// button CE
 		Button btnCE = new Button("CE");
-		btnCE.setOnMouseClicked(event -> {
-		 	display.setText(calculator.clear());
-		 	equation.setText(calculator.clear());
-		});	
 		
 		// button C
 		Button btnC = new Button("C");
-		btnC.setOnMouseClicked(event -> {
-		 	display.setText(calculator.clear());
-		 	equation.setText(calculator.clear());
-		});	
+		btnC.setOnMouseClicked(event -> {handleEvent("c");});	
 		
 		// button /
 		Button btnDivision = new Button("/");
-		btnDivision.setOnMouseClicked(event -> {
-		 	display.setText(calculator.toEquation("/"));
-		 	equation.setText(calculator.equationToString());
-		});		
+		btnDivision.setOnMouseClicked(event -> {handleEvent("/");});		
 
 		// button *
 		Button btnMultiplication = new Button("*");
-		btnMultiplication.setOnMouseClicked(event -> {
-		 	display.setText(calculator.toEquation("*"));
-		 	equation.setText(calculator.equationToString());
-		});
+		btnMultiplication.setOnMouseClicked(event -> {handleEvent("*");});
 
 		// button -
 		Button btnSubstraction = new Button("-");
-		btnSubstraction.setOnMouseClicked(event -> {
-		 	display.setText(calculator.toEquation("-"));
-		 	equation.setText(calculator.equationToString());
-		});
+		btnSubstraction.setOnMouseClicked(event -> {handleEvent("-");});
 		
 		// button +
 		Button btnAddition = new Button("+");
-		btnAddition.setOnMouseClicked(event -> {
-		 	display.setText(calculator.toEquation("+"));
-		 	equation.setText(calculator.equationToString());
-		});
+		btnAddition.setOnMouseClicked(event -> {handleEvent("+");});
 		
 		// button . (disabled...)
 		Button btnDecimal = new Button(".");
@@ -161,10 +163,7 @@ public class CalculatorScene {
 		// button =
 		Button btnEnter = new Button("=");
 		btnEnter.setDefaultButton(true);
-		btnEnter.setOnMouseClicked(event -> {
-			equation.setText(calculator.equationToString());
-			display.setText(calculator.result());
-		});
+		btnEnter.setOnMouseClicked(event -> {handleEvent("=");});
 
 		/*
 		===================================================== 
@@ -188,7 +187,44 @@ public class CalculatorScene {
 				((Button) node).setStyle("-fx-font: 22 arial; -fx-margin: 5px");
 			}
 		}
-
 		return grid;
+	}
+	
+	private void handleEvent(String code) {
+		
+		TextField display = (TextField) scene.lookup("#display");
+		Label equation = (Label) scene.lookup("#equation");
+		
+		switch (code) {
+		case "0": // fallthrough
+		case "1":			
+		case "2":
+		case "3":
+		case "4":
+		case "5":
+		case "6":
+		case "7":
+		case "8":
+		case "9":
+		case "-":
+		case "+":
+		case "/":
+		case "*":
+		 	display.setText(calculator.toEquation(code));
+		 	equation.setText(calculator.equationToString());
+			break;
+		case "=": // fallthrough	
+		case "":
+			equation.setText(calculator.equationToString());
+			display.setText(calculator.result());
+			break;
+		case "c": // fallthrough	
+		case "C":
+		 	display.setText(calculator.clear());
+		 	equation.setText(calculator.clear());
+			break;
+		default:
+			break;
+		}
 	}
 }
