@@ -139,6 +139,7 @@ public class CalculatorScene {
 
 		// button CE
 		Button btnCE = new Button("CE");
+		btnCE.setDisable(true);
 
 		// button C
 		Button btnC = new Button("C");
