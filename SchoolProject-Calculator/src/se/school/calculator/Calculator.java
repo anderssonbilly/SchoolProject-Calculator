@@ -1,8 +1,9 @@
 package se.school.calculator;
 
+import java.nio.channels.NetworkChannel;
 import java.util.ArrayList;
 
-/** 
+/**
  * The class Calculator handles the calculations.
  */
 public class Calculator {
@@ -33,16 +34,24 @@ public class Calculator {
 	 * Adds a string to the ArrayList
 	 */
 	public String toEquation(String o) {
-
-		if (intCheck(o)) {
+		if (equation.size() > 0) {
+			String prev = equation.get(equation.size() - 1);
+			if (intCheck(o) && intCheck(prev)) {
+				equation.set(equation.size() - 1, prev + o.toString());
+			} else {
+				if (intCheck(prev)) {
+					equation.add(o.toString());
+				} else {
+					if (!intCheck(o)) {
+						equation.set(equation.size() - 1, o);
+					} else {
+						equation.add(o);
+					}
+				}
+			}
+		} else {
 			equation.add(o.toString());
-		} else if (equation.size() > 0) {
-			if (intCheck(equation.get(equation.size() - 1)))
-				equation.add(o);
-			else
-				equation.set(equation.size() - 1, o);
 		}
-
 		return equationToString();
 	}
 
@@ -50,39 +59,12 @@ public class Calculator {
 	 * Gets the equation and the calculated result
 	 */
 	public String result() {
-		String temp = "";
-		String arithmetic = "";
-		String temp2 = "";
-		boolean first = true;
-		for (int i = 0; i < equation.size(); i++) {
-			if (first && intCheck(equation.get(i)))
-				temp = temp + equation.get(i);
-			if (first && !intCheck(equation.get(i))) {
-				arithmetic = equation.get(i);
-				first = false;
-				i++;
-			}
-			if (!first && intCheck(equation.get(i))) {
-				temp2 = temp2 + equation.get(i);
-			}
-			if (!first && !intCheck(equation.get(i))) {
-				temp = calculate(Integer.parseInt(temp), Integer.parseInt(temp2), arithmetic);
-				temp2 = "";
-				arithmetic = equation.get(i);
-			}
-			if (!first && i == equation.size() - 1) {
-				temp = calculate(Integer.parseInt(temp), Integer.parseInt(temp2), arithmetic);
-			}
-		}
+		calculate(true);
+		calculate(false);
 
-		equation = new ArrayList<String>();
-		for (char c : temp.toCharArray()) {
-			equation.add(String.valueOf(c));
-		}
-
-		return temp;
+		return equationToString();
 	}
-	
+
 	/**
 	 * Checks whether the value is an integer
 	 */
@@ -98,7 +80,42 @@ public class Calculator {
 	/**
 	 * Calculates the result
 	 */
-	private String calculate(Integer left, Integer right, String arithmetic) {
+	private String calculate(boolean priority) {
+		if (equation.size() > 2) {
+			ArrayList<String> newEquation = new ArrayList<String>();
+			for (int i = 0; i < equation.size(); i++) {
+				newEquation.add(equation.get(i));
+				if (!intCheck(equation.get(i)) && equation.size() - 1 != i) {
+
+					String left = equation.get(i - 1);
+					String arithmetic = equation.get(i);
+					String right = equation.get(i + 1);
+
+					if (priority) {
+						if (arithmetic.toString().equals("*") || arithmetic.toString().equals("/")) {
+							newEquation.remove(newEquation.size()-1);
+							newEquation.remove(newEquation.size()-1);
+							newEquation.add(getCaculationResult(Integer.parseInt(left), Integer.parseInt(right), arithmetic));
+							i++;
+						}
+					} else {
+						newEquation.remove(newEquation.size()-1);
+						newEquation.remove(newEquation.size()-1);
+						newEquation.add(getCaculationResult(Integer.parseInt(left), Integer.parseInt(right), arithmetic));
+						equation.set(i+1, getCaculationResult(Integer.parseInt(left), Integer.parseInt(right), arithmetic));
+						i++;
+					}
+					newEquation.trimToSize();
+				}
+
+			}
+			equation = newEquation;
+		}
+		return equationToString();
+
+	}
+
+	private String getCaculationResult(Integer left, Integer right, String arithmetic) {
 		switch (arithmetic) {
 		case "+":
 			return String.valueOf(Math.addExact(left, right));
