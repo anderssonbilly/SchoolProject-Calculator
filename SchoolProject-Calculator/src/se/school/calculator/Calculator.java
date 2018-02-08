@@ -1,6 +1,5 @@
 package se.school.calculator;
 
-import java.nio.channels.NetworkChannel;
 import java.util.ArrayList;
 
 /**
