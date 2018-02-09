@@ -77,7 +77,7 @@ public class Calculator {
 	}
 
 	/**
-	 * Calculates the result
+	 * Calculates the result with operator priority implemented.
 	 */
 	private String calculate(boolean priority) {
 		if (equation.size() > 2) {
@@ -94,14 +94,15 @@ public class Calculator {
 						if (arithmetic.toString().equals("*") || arithmetic.toString().equals("/")) {
 							newEquation.remove(newEquation.size()-1);
 							newEquation.remove(newEquation.size()-1);
-							newEquation.add(getCaculationResult(Integer.parseInt(left), Integer.parseInt(right), arithmetic));
+							newEquation.add(getCalculationResult(Integer.parseInt(left), Integer.parseInt(right), arithmetic));
+							equation.set(i+1, getCalculationResult(Integer.parseInt(left), Integer.parseInt(right), arithmetic));
 							i++;
 						}
 					} else {
 						newEquation.remove(newEquation.size()-1);
 						newEquation.remove(newEquation.size()-1);
-						newEquation.add(getCaculationResult(Integer.parseInt(left), Integer.parseInt(right), arithmetic));
-						equation.set(i+1, getCaculationResult(Integer.parseInt(left), Integer.parseInt(right), arithmetic));
+						newEquation.add(getCalculationResult(Integer.parseInt(left), Integer.parseInt(right), arithmetic));
+						equation.set(i+1, getCalculationResult(Integer.parseInt(left), Integer.parseInt(right), arithmetic));
 						i++;
 					}
 					newEquation.trimToSize();
@@ -114,7 +115,10 @@ public class Calculator {
 
 	}
 
-	private String getCaculationResult(Integer left, Integer right, String arithmetic) {
+	/**
+	 * Performs calculations and gets the calculated result
+	 */
+	private String getCalculationResult(Integer left, Integer right, String arithmetic) {
 		switch (arithmetic) {
 		case "+":
 			return String.valueOf(Math.addExact(left, right));
