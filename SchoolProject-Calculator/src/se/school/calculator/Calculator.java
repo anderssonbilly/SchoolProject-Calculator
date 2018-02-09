@@ -95,14 +95,14 @@ public class Calculator {
 							newEquation.remove(newEquation.size()-1);
 							newEquation.remove(newEquation.size()-1);
 							newEquation.add(getCalculationResult(Integer.parseInt(left), Integer.parseInt(right), arithmetic));
-							equation.set(i+1, getCalculationResult(Integer.parseInt(left), Integer.parseInt(right), arithmetic));
+							equation.set(i+1, newEquation.get(newEquation.size() - 1));
 							i++;
 						}
 					} else {
 						newEquation.remove(newEquation.size()-1);
 						newEquation.remove(newEquation.size()-1);
 						newEquation.add(getCalculationResult(Integer.parseInt(left), Integer.parseInt(right), arithmetic));
-						equation.set(i+1, getCalculationResult(Integer.parseInt(left), Integer.parseInt(right), arithmetic));
+						equation.set(i+1, newEquation.get(newEquation.size() - 1));
 						i++;
 					}
 					newEquation.trimToSize();
